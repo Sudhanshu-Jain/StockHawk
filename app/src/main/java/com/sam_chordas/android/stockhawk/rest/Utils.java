@@ -76,13 +76,19 @@ public class Utils {
     return change;
   }
 
-  public static ContentProviderOperation buildBatchOperation(JSONObject jsonObject){
+  public static ContentProviderOperation buildBatchOperation(JSONObject jsonObject) {
     ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
-        QuoteProvider.Quotes.CONTENT_URI);
+            QuoteProvider.Quotes.CONTENT_URI);
+    String changes = null;
     try {
-      String change = null;
-      if(jsonObject!=null && jsonObject.getString("Change")!=null && jsonObject.getString("Change")!="null") {
-        change = jsonObject.getString("Change");
+      changes = jsonObject.getString("Change");
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    Log.d("values", changes);
+    if (changes != null && changes != "null") {
+      try {
+        String change = jsonObject.getString("Change");
         builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString("symbol"));
         builder.withValue(QuoteColumns.BIDPRICE, truncateBidPrice(jsonObject.getString("Bid")));
         builder.withValue(QuoteColumns.PERCENT_CHANGE, truncateChange(
@@ -94,10 +100,12 @@ public class Utils {
         } else {
           builder.withValue(QuoteColumns.ISUP, 1);
         }
+
+      } catch (JSONException e) {
+        e.printStackTrace();
       }
-    } catch (JSONException e){
-      e.printStackTrace();
+      return builder.build();
     }
-    return builder.build();
+    return null;
   }
 }
