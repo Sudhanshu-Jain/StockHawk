@@ -67,7 +67,7 @@ public class StockTaskService extends GcmTaskService{
     } catch (UnsupportedEncodingException e) {
       e.printStackTrace();
     }
-    if (params.getTag().equals(getResources().getString(R.string.string_init)) || params.getTag().equals(getResources().getString(R.string.string_periodic))){
+    if (params.getTag().equals(mContext.getResources().getString(R.string.string_init)) || params.getTag().equals(mContext.getResources().getString(R.string.string_periodic))){
       isUpdate = true;
       initQueryCursor = mContext.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
           new String[] { "Distinct " + QuoteColumns.SYMBOL }, null,
@@ -85,7 +85,7 @@ public class StockTaskService extends GcmTaskService{
         initQueryCursor.moveToFirst();
         for (int i = 0; i < initQueryCursor.getCount(); i++){
           mStoredSymbols.append("\""+
-              initQueryCursor.getString(initQueryCursor.getColumnIndex(getResources().getString(R.string.string_symbol)))+"\",");
+              initQueryCursor.getString(initQueryCursor.getColumnIndex(mContext.getResources().getString(R.string.string_symbol)))+"\",");
           initQueryCursor.moveToNext();
         }
         mStoredSymbols.replace(mStoredSymbols.length() - 1, mStoredSymbols.length(), ")");
@@ -95,10 +95,10 @@ public class StockTaskService extends GcmTaskService{
           e.printStackTrace();
         }
       }
-    } else if (params.getTag().equals(getResources().getString(R.string.string_add))){
+    } else if (params.getTag().equals(mContext.getResources().getString(R.string.string_add))){
       isUpdate = false;
       // get symbol from params.getExtra and build query
-      String stockInput = params.getExtras().getString(getResources().getString(R.string.string_symbol));
+      String stockInput = params.getExtras().getString(mContext.getResources().getString(R.string.string_symbol));
       try {
         urlStringBuilder.append(URLEncoder.encode("\""+stockInput+"\")", "UTF-8"));
       } catch (UnsupportedEncodingException e){
